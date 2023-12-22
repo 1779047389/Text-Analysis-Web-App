@@ -8,7 +8,6 @@ from collections import Counter
 import re
 
 from pyecharts.globals import ThemeType
-from pyecharts.render import make_snapshot
 
 
 def process(url):
@@ -20,9 +19,17 @@ def process(url):
     soup = soup.get_text()
     # 使用正则表达式去除HTML标签
     soup = re.sub(r'<.*?>', '', soup)
+
+
+
     # 去除标点符号和多余空格
     soup = re.sub(r'[^\w\s]', '', soup)
+    # 过滤停用词
+    stopwords_list = ["的", "了", "是", "我", "你", "他", "她", "我们", "你们", "他们", "和", "在", "有",
+                      "就"]
     words = soup.split()
+    soup = [word for word in soup if word not in stopwords_list]
+
 
     word_freq = Counter(words)
     wordcloud_data = [(word, freq) for word, freq in word_freq.items()]
